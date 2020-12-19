@@ -1,1 +1,1 @@
-SuBoXian is shit.
+SuBoXian is stone.
