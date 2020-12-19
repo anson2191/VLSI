@@ -13,5 +13,5 @@ module ALU(
 	input [`ALU_OP-1:0] Op;
 	output [`INTERNAL_BITS-1:0] Result,Zero;
 
-	assign Result = 1'bz;
+	assign Result = 32'bz;
 endmodule
