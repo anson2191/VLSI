@@ -3,35 +3,31 @@
 `define CYCLE 10 //Cycle time
 `define MAX 100 //Max cycle number
 
-`include "ROM.v"
+`include "Instruction_memory.v"
 `include "def.v"
 
-module ROM_tb;
+module Instruction_memory_tb;
 
 	//parameters
-	parameter ADDR_BITS = 17;
+	parameter ADDR_BITS = 10;
 
 	//inputs
-	reg CK;
-	reg CS;
-	reg OE;
-	reg [ADDR_BITS-1:0] A;
+	reg clk;
+	reg [ADDR_BITS-1:0] address;
 
 	//outputs
-	wire [`DATA_BITS-1:0] DO;
+	wire [`DATA_BITS-1:0] instruction;
 
-	ROM ROM_W(
-		.CK(CK),
-		.CS(CS),
-		.OE(OE),
-		.A(A),
-		.DO(DO)
+	Instruction_memory mem(
+		.clk(clk),
+		.address(address),
+		.instruction(instruction)
 	);
-	defparam ROM_W.ADDR_BITS = 17;
-	defparam ROM_W.MEM_SIZE = 131072;
+	defparam mem.ADDR_BITS = 10;
+	defparam mem.MEM_SIZE = 1024;
 	
-	initial CK = 1'b0;
-	always #(`CYCLE/2) CK = ~CK;
+	initial clk = 1'b0;
+	always #(`CYCLE/2) clk = ~clk;
 
 	integer i;
 
@@ -39,14 +35,12 @@ module ROM_tb;
 	begin
 		for(i=0;i<100;i=i+1)
 		begin
-			ROM_W.Memory[i] = i;
+			mem.Memory[i] = i;
 		end
-		CS = 1; OE = 0; A = 0;
-
-		#(`CYCLE) OE = 1;
+		address = 0;
 		for(i=0;i<100;i=i+1)
 		begin
-			#(`CYCLE) A = i;
+			#(`CYCLE) address = i;
 		end
 
 		#(`CYCLE) $finish;
@@ -55,8 +49,8 @@ module ROM_tb;
 	initial
 	begin
 		`ifdef FSDB
-			$fsdbDumpfile("ROM.fsdb");
-			$fsdbDumpvars(0,ROM_W,"+struct");
+			$fsdbDumpfile("Instruction_memory.fsdb");
+			$fsdbDumpvars(0,mem,"+struct");
 		`endif
 	end
 

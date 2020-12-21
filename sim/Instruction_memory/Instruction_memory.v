@@ -1,39 +1,27 @@
-//=========================================
-//Author:		Chen Yun-Ru (May)
-//Filename:		ROM.v
-//Description:	Read-Only Memory
-//Version:		0.1
-//=========================================
 `include "def.v"
 
-module ROM(
-	CK,
-	CS,
-	OE,
-	A,
-	DO
+module Instruction_memory(
+	clk,
+	address,
+	instruction
 );
 
 	//parameters
 	parameter ADDR_BITS = 10;
 	parameter MEM_SIZE = 1024;
 
-	input CK;
-	input CS;
-	input OE;
-	input [ADDR_BITS-1:0] A;
-	output [`DATA_BITS-1:0] DO;
+	input clk;
+	input [ADDR_BITS-1:0] address;
+	output [`DATA_BITS-1:0] instruction;
 
 	reg [`DATA_BITS-1:0] Memory [0:MEM_SIZE-1];
-	reg [`DATA_BITS-1:0] latched_DO;
+	reg [`DATA_BITS-1:0] latched_output;
 
-	always@(posedge CK)
+	always@(posedge clk)
 	begin
-		if(CS)
-			latched_DO <= Memory[A];
-		else;
+		latched_output <= Memory[address];
 	end
 
-	assign DO = OE? latched_DO:{(`DATA_BITS){1'bz}};
+	assign instruction = latched_output;
 
 endmodule
