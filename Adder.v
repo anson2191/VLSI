@@ -1,4 +1,5 @@
 `include "def.v"
+//`define PC_BITS 32
 module Adder(
 	in,
 	Result
