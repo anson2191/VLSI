@@ -1,6 +1,5 @@
 `include "def.v"
-//`define INTERNAL_BITS 32
-//`define DATA_BITS 32
+//`define PC_BITS 32
 module PC(
 	in,
 	hold,
