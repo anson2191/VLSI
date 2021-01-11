@@ -9,7 +9,7 @@
 `define OPCODE_BITS 6
 `define opcode ir[31:26]
 `define FUNCTION_BITS 6
-`defin `function ir[5:0]
+`define function ir[5:0]
 `define ALUOP_BITS 2
 `define ALUCONTROL_BITS 4
 
