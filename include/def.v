@@ -1,24 +1,31 @@
 `ifndef DEF_V
 `define DEF_V
 
-//Global
-`define DATA_BITS 16
 `define INTERNAL_BITS 32
+//----------------------instruction field------------------------
+`define OPCODE 31:26
+//RTYPE
+`define RTYPE_RS 25:21
+`define RTYPE_RT 20:16
+`define RTYPE_RD 15:11
+`define RTYPE_SHAMT 10:6
+`define RTYPE_FUNC 5:0
+//JTYPE
+`define JTYPE_CONST 25:0
+//ITYPE
+`define ITYPE_RS 25:21
+`define ITYPE_RT 20:16
+`define ITYPE_IMM 15:0
+//-------------------------OPCODE---------------------------------
+`define RTYPE 6'b000_000
+`define LW 6'b100_011
+`define SW 6'b101_011
+`define BEQ 6'b000_100
+`define JMP 6'b000_010
+//----------------------Special instruction-----------------------
+`define NOP 32'h0000_0000
+`define SYSCALL 32'h0000_000c
 
-//ROM(Image)
-`define ROM_IM_SIZE 1024 
-`define ROM_IM_ADDR_BITS 10
 
-//ROM(Weight)
-`define ROM_W_SIZE 131072 
-`define ROM_W_ADDR_BITS 17
-
-//ROM(Bias)
-`define ROM_B_SIZE 256 
-`define ROM_B_ADDR_BITS 8
-
-//Two port SRAM
-`define SRAM_SIZE 8192  
-`define SRAM_ADDR_BITS 13
 
 `endif
