@@ -26,6 +26,10 @@
 `define NOP 32'h0000_0000
 `define SYSCALL 32'h0000_000c
 
-
+`define PC_BITS 32
+`define OPCODE_BITS 6
+`define FUNCTIONCODE_BITS 6
+`define ALUOP_BITS 2
+`define ALUCONTROL_BITS 4
 
 `endif
