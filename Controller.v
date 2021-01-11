@@ -93,6 +93,7 @@ module Controller(
 				M = 3'b000;
 				WB = 2'b00;
 			end
+		endcase
 	 end
 	 FINISH:begin
 		n_state = FINISH;
