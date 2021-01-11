@@ -1,55 +1,81 @@
 `include "def.v"
 //`define DATA_BITS 32
 //`define INTERNAL_BITS 16
-//`define ALUOP_BITS 4
+//`define ALUCONTROL_BITS 4
 
 module ALU(
-	Data_in1,
-	Data_in2,
-	ALUop,
+	src1,
+	src2,
+	ALUcontrol,
 	Zero,
 	Result
 );
 	parameter AND = 4'b0000,
-		  OR  = 4'b0001,
-		  ADD = 4'b0010,
-		  SUB = 4'b0110,
-		  SLT = 4'b0111,
-		  NOR = 4'b1100;
+			  OR  = 4'b0001,
+			  ADD = 4'b0010,
+			  SUB = 4'b0110,
+			  SLT = 4'b0111,
+			  MUL = 4'b1000,
+			  NOR = 4'b1100;
 	
-	input [`INTERNAL_BITS-1:0] Data_in1,Data_in2;
-	input [`ALUOP_BITS-1:0] ALUop;
-	output [`INTERNAL_BITS-1:0] Result, Zero;
+	input [`INTERNAL_BITS-1:0] src1,src2;
+	input [`ALUCONTROL_BITS-1:0] ALUcontrol;
+	output [`INTERNAL_BITS:0] Result;
+	output Zero, exception;
 	
 	always@(*) begin
-		case(ALUop)
+		Result[`INTERNAL_BITS] = 1'b0;
+		zero = 1'b0;
+		case(ALUcontrol)
 			AND:begin
-				Result = Data_in1&Data_in2;//bit-wise
-			end
+					Result[`INTERNAL_BITS-1:0] = src1&src2;//bit-wise
+				end
 			
 			OR:begin
-				Result = Data_in1|Data_in2;//bit-wise
-			end
+					Result[`INTERNAL_BITS-1:0] = src1|src2;//bit-wise
+				end
 			
 			ADD:begin //CLA?
-				Result = Data_in1 + Data_in2;
-			end
+					Result[`INTERNAL_BITS-1:0] = src1 + src2;
+					if((src1[`INTERNAL_BITS-1]==1'b0&&src2[`INTERNAL_BITS-1]==1'b0&&Result==1'b1)||
+					   (src1[`INTERNAL_BITS-1]==1'b1&&src2[`INTERNAL_BITS-1]==1'b1&&Result==1'b0))
+						Result[`INTERNAL_BITS] = 1'b1;
+					else
+						Result[`INTERNAL_BITS] = 1'b0;
+				end
 			
 			SUB:begin
-				
-			end
+					Result[`INTERNAL_BITS-1:0] = src1 - src2;
+					if((src1[31]==1'b0 && src2[31]==1'b1 && alu_out[31]==1'b1)||
+				       (src1[31]==1'b1 && src2[31]==1'b0 && alu_out[31]==1'b0))
+						Result[`INTERNAL_BITS] = 1'b1;
+					else
+						Result[`INTERNAL_BITS] = 1'b0;
+					
+					if(Result==33'b0)
+						zero = 1'b1;
+					else
+						zero = 1'b0;
+				end
 			
 			SLT:begin
+					src1_2 = src1 - src2;
+					Result = (src1_2[`INTERNAL_BITS-1]) 1'b1:1'b0;
+				end
 			
-			end
+			MUL:begin
+					Result[`INTERNAL_BITS-1:0] = src1[14:0]*src2[14:0];
+				end
 			
 			NOR:begin
-			
-			end
+					temp[`INTERNAL_BITS-1:0] = src1|src2;//bit-wise
+					Result = ~temp;
+				end
+				
 			
 			default:begin
-			
-			end			
+						Result[`INTERNAL_BITS] = 33'b0;
+					end			
 		endcase
 	end
 	
