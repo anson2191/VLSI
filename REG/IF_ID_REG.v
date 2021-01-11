@@ -2,6 +2,7 @@
 //`define INTERNAL_BITS 32
 module IF_ID_REG(
 	clk,//neg edge
+	flush,
 	Instruction_in,
 	Instruction_out,
 	PC_in,
@@ -9,13 +10,13 @@ module IF_ID_REG(
 );
 
 	input [`INTERNAL_BITS-1:0] Instruction_in, PC_in;
-	input clk;
+	input clk,flush;
 	
 	output reg [`INTERNAL_BITS-1:0] Instruction_out, PC_out;
 
- always@(posedge clk)begin
+ always@(posedge clk or posedge flush)begin
 	PC_out <= PC_in;
-	Instruction_out <= Instruction_in;
+	Instruction_out <= (flush)?`NOP:Instruction_in;
  end
 
 endmodule

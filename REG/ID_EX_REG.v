@@ -2,6 +2,7 @@
 //`define INTERNAL_BITS 32
 module ID_EX_REG(
 	clk,//neg edge
+	flush,
 	EX_in,
 	WB_in,
 	M_in,
@@ -27,7 +28,7 @@ module ID_EX_REG(
 	input [3:0] EX_in;//Reg Dst, ALU Op1, ALU Op0, ALUSrc
 	input [1:0] WB_in;//Reg write, mem to reg
 	input [2:0] M_in;//branch, mem read, mem write
-	input clk;
+	input clk,flush;
 	
 	output reg [`INTERNAL_BITS-1:0] Read_data1_out, Read_data2_out, Sign_extend_out, PC_out;
 	output reg [4:0] Instruction_20_16_out, Instruction_15_11_out;
@@ -36,10 +37,17 @@ module ID_EX_REG(
 	output reg [2:0] M_out;
 	output reg ALU_zero_out;
 
- always@(posedge clk)begin
-	EX_out <= EX_in;
-	WB_out <= WB_in;
-	M_out <= M_in;
+ always@(posedge clk or posedge flush)begin
+	if(flush)begin
+		WB_out <= 2'b0;
+		M_out <= 3'b0;
+		EX_out <= 4'b0;
+	end
+	else begin
+		WB_out <= WB_in;
+		M_out <= M_in;
+		EX_out <= EX_in;
+	end
 	Read_data1_out <= Read_data1_in;
 	Read_data2_out <= Read_data2_in;
 	Sign_extend_out <= Sign_extend_in;
