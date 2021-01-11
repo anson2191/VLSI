@@ -8,10 +8,9 @@
 `define PC_BITS 32
 `define OPCODE_BITS 6
 `define opcode ir[31:26]
-`define FUNCTION_BITS 6
-`define function ir[5:0]
+`define FUNCTIONCODE_BITS 6
+`define functioncode ir[5:0]
 `define ALUOP_BITS 2
 `define ALUCONTROL_BITS 4
-
 
 `endif
