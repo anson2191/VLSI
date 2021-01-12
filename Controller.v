@@ -59,9 +59,21 @@ module Controller(
 		IF_flush = (Branch_not_taken)?1'b1:1'b0;
 		case(Instruction[`OPCODE])
 			`RTYPE:begin
-				EX = 4'b1100;
-				M = 3'b000;
-				WB = 2'b10;
+				if(Instruction==`NOP)begin
+					EX = 4'b0000;
+					M = 3'b000;
+					WB = 2'b00;
+				end
+				else if(Instruction==`SYSCALL)begin
+					EX = 4'b0000;
+					M = 3'b000;
+					WB = 2'b00;
+				end
+				else begin
+					EX = 4'b1100;
+					M = 3'b000;
+					WB = 2'b10;
+				end
 			end
 			`LW:begin
 				EX = 4'b0001;
@@ -83,12 +95,7 @@ module Controller(
 				M = 3'b000;
 				WB = 2'b00;
 			end
-			`NOP:begin
-				EX = 4'b0000;
-				M = 3'b000;
-				WB = 2'b00;
-			end
-			`HLT:begin
+			default:begin
 				EX = 4'b0000;
 				M = 3'b000;
 				WB = 2'b00;
