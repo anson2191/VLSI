@@ -25,20 +25,24 @@ module Hazard_detection_unit(IF_ID_RS,
 			//lw before R-type or lw before branch
 			Hold = 1'b1;
 			ID_Flush = 1'b1; //ID_EX_MemRead = 0 next cycle
+			EX_Flush = 1'b0;
 		end
 		else if(EX_MEM_MemRead && branch && ((IF_ID_RS==EX_MEM_RT) || (IF_ID_RT==EX_MEM_RT)) ) begin
 			//lw before before branch
 			Hold = 1'b1;
+			ID_Flush = 1'b0;
 			EX_Flush = 1'b1;
 		end
 		else if(ID_EX_RegWrite && ((IF_ID_RS==ID_EX_RD) || (IF_ID_RT==ID_EX_RD)) ) begin
 			//R-type before branch
 			Hold = 1'b1;
 			ID_Flush = 1'b1;
+			EX_Flush = 1'b0;
 		end
 		else begin
 			Hold = 1'b0;
 			ID_Flush = 1'b0;
+			EX_Flush = 1'b0;
 		end
 	end
 
