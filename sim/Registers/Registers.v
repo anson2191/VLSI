@@ -2,6 +2,7 @@
 
 module Register(
 	CLKA,
+	rst,
 	Read_reg1,
 	Read_reg2,
 	Read_data1,
@@ -25,18 +26,27 @@ module Register(
 	reg [`INTERNAL_BITS-1:0] REG [0:REG_SIZE-1];
 
 	//Port A read only
-	always@(posedge CLKA)
+	always@(posedge CLKA or posedge rst)
 	begin
-		Read_data1 <= REG[Read_reg1];
-		Read_data2 <= REG[Read_reg2];
+		if(rst)begin
+			Read_data1 <= 32'b0;
+			Read_data2 <= 32'b0;
+		end
+		else begin
+			Read_data1 <= REG[Read_reg1];
+			Read_data2 <= REG[Read_reg2];
+		end
 	end
 
 	//Port B write only
-	always@(posedge CLKB)
+	always@(posedge CLKB or posedge rst)
 	begin
-		if(Write_enable)
+		if(rst)
+			REG[Write_data] <= 32'b0;
+		else if(Write_enable && (Write_reg!=5'b0))
 			REG[Write_reg] <= Write_data;
-		else;
+		else
+			REG[Write_reg] <= REG[Write_reg];
 	end
 
 endmodule

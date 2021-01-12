@@ -2,7 +2,7 @@
 //`define INTERNAL_BITS 32
 module EX_MEM_REG(
 	clk,//neg edge
-	flush,
+	rst,
 	WB_in,
 	M_in,
 	WB_out,
@@ -23,7 +23,7 @@ module EX_MEM_REG(
 	input [4:0] REG_dst_in;
 	input [1:0] WB_in;//Reg write, mem to reg
 	input [2:0] M_in;//branch, mem read, mem write
-	input ALU_zero_in,clk,flush;
+	input ALU_zero_in,clk,rst;
 	
 	output reg [`INTERNAL_BITS-1:0] ALU_result_out,ALU_src2_out,PC_out;
 	output reg [4:0] REG_dst_out;
@@ -31,20 +31,25 @@ module EX_MEM_REG(
 	output reg [2:0] M_out;
 	output reg ALU_zero_out;
 
- always@(posedge clk or posedge flush)begin
-	if(flush)begin
+ always@(posedge clk or posedge rst)begin
+	if(rst)begin
 		WB_out <= 2'b0;
 		M_out <= 3'b0;
+		ALU_result_out <= 32'b0;
+		ALU_src2_out <= 32'b0;
+		ALU_zero_out <= 32'b0;
+		PC_out <= 32'b0;
+		REG_dst_out <= 5'b0;
 	end
 	else begin
 		WB_out <= WB_in;
 		M_out <= M_in;
+		ALU_result_out <= ALU_result_in;
+		ALU_src2_out <= ALU_src2_in;
+		ALU_zero_out <= ALU_zero_in;
+		PC_out <= PC_in;
+		REG_dst_out <= REG_dst_in;
 	end
-	ALU_result_out <= ALU_result_in;
-	ALU_src2_out <= ALU_src2_in;
-	ALU_zero_out <= ALU_zero_in;
-	PC_out <= PC_in;
-	REG_dst_out <= REG_dst_in;
  end
 
 endmodule

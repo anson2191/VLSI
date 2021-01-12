@@ -2,6 +2,8 @@
 `define DEF_V
 
 `define INTERNAL_BITS 32
+`define IR_ADDR_BITS 10
+`define DATA_MEM_ADDR_BITS 13
 //----------------------instruction field------------------------
 `define OPCODE 31:26
 //RTYPE
@@ -20,12 +22,13 @@
 `define RTYPE 6'b000_000
 `define LW 6'b100_011
 `define SW 6'b101_011
+`define ADDI 6'b001_000
+`define SUBI 6'b001_001
 `define BEQ 6'b000_100
 `define JMP 6'b000_010
 //----------------------Special instruction-----------------------
 `define NOP 32'h0000_0000
 `define SYSCALL 32'h0000_000c
-
 
 
 `endif

@@ -75,6 +75,16 @@ module Controller(
 					WB = 2'b10;
 				end
 			end
+			`ADDI:begin
+				EX = 4'b0001;
+				M = 3'b000;
+				WB = 2'b10;
+			end
+			`SUBI:begin
+				EX = 4'b0001;
+				M = 3'b000;
+				WB = 2'b10;
+			end
 			`LW:begin
 				EX = 4'b0001;
 				M = 3'b010;
