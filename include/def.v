@@ -5,6 +5,8 @@
 //----------------------instruction field------------------------
 `define OPCODE 31:26
 //RTYPE
+
+`define REGISTER_BITS 5
 `define RTYPE_RS 25:21
 `define RTYPE_RT 20:16
 `define RTYPE_RD 15:11

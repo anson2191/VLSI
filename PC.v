@@ -1,15 +1,22 @@
 `include "def.v"
 //`define INTERNAL_BITS 32
 //`define DATA_BITS 32
-module Adder(
-	Data_in1,
-	Data_in2,
-	Result
-);
+module PC(
+	clk,
+	in,
+	hold,
+	out
+	);
 
-	input [`INTERNAL_BITS-1:0] Data_in1,Data_in2;
-	output [`INTERNAL_BITS-1:0] Result;
-
- assign Result = Data_in1 + Data_in2;
+	input [`PC_BITS-1:0] in;
+	input hold, clk;
+	output reg [`PC_BITS-1:0] out;
+	
+	always@(posedge clk) begin
+		if(hold)
+			out <= out;
+		else
+			out <= in;
+	end
 
 endmodule
