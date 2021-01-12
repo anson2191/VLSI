@@ -6,48 +6,43 @@
 //=========================================
 `include "def.v"
 
-module TwoPort_SRAM(
+module Data_memory(
 	CLKA,
-	CENA,
-	AA,
-	QA,
 	CLKB,
-	CENB,
-	WENB,
-	AB,
-	DB
-);
+	Read_enable,
+	Write_enable,
+	Address,
+	Write_data,
+	Data_out
+);//two port sram
 
 	//parameters
 	parameter ADDR_BITS = 13;
 	parameter MEM_SIZE = 8192;
 
 	input CLKA,CLKB;
-	input CENA,CENB;
-	input WENB;
-	input [ADDR_BITS-1:0] AA,AB;
-	input [`INTERNAL_BITS-1:0] DB;
-	output [`INTERNAL_BITS-1:0] QA;
+	input Read_enable,Write_enable;
+	input [ADDR_BITS-1:0] Address;
+	input [`INTERNAL_BITS-1:0] Write_data;
+	output [`INTERNAL_BITS-1:0] Data_out;
 
 	reg [`INTERNAL_BITS-1:0] Memory [0:MEM_SIZE-1];
-	reg [`INTERNAL_BITS-1:0] QA;
+	reg [`INTERNAL_BITS-1:0] Data_out;
 
 	//Port A read only
 	always@(posedge CLKA)
 	begin
-		if(CENA)
-			QA <= Memory[AA];
+		if(Read_enable)
+			Data_out <= Memory[Address];
 		else;
 	end
 
 	//Port B write only
 	always@(posedge CLKB)
 	begin
-		if(CENB)
+		if(Write_enable)
 		begin
-			if(WENB)
-				Memory[AB] <= DB;
-			else;
+			Memory[Address] <= Write_data;
 		end
 		else;
 	end

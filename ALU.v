@@ -45,6 +45,7 @@ module ALU(
 			
 			SUB:begin
 					Result[`INTERNAL_BITS-1:0] = src1 - src2;
+
 					if((src1[31]==1'b0 && src2[31]==1'b1 && alu_out[31]==1'b1)||(src1[31]==1'b1 && src2[31]==1'b0 && alu_out[31]==1'b0))
 						Result[`INTERNAL_BITS] = 1'b1;
 					else
@@ -56,15 +57,18 @@ module ALU(
 						zero = 1'b0;
 				end
 			
+      
 			SLT:begin
 					src1_2 = src1 - src2;
 					Result[`INTERNAL_BITS-1:0] = (src1_2[`INTERNAL_BITS-1]) 1'b1:1'b0;
 				end
 			
+      
 			MUL:begin
 					Result[`INTERNAL_BITS-1:0] = src1[14:0]*src2[14:0];
 				end
 			
+      
 			NOR:begin
 					temp[`INTERNAL_BITS-1:0] = src1|src2;//bit-wise
 					Result[`INTERNAL_BITS-1:0] = ~temp;
@@ -73,7 +77,7 @@ module ALU(
 			
 			default:begin
 					Result[`INTERNAL_BITS] = 33'b0;
-				end			
+              end			
 		endcase
 	end
 	
