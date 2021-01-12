@@ -60,7 +60,7 @@ module ALU(
       
 			SLT:begin
 					src1_2 = src1 - src2;
-					Result[`INTERNAL_BITS-1:0] = (src1_2[`INTERNAL_BITS-1]) 1'b1:1'b0;
+					Result[`INTERNAL_BITS:0] = (src1_2[`INTERNAL_BITS-1]) 1'b1:1'b0;
 				end
 			
       
