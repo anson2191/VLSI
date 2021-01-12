@@ -1,9 +1,3 @@
-//=========================================
-//Author:		Chen Yun-Ru (May)
-//Filename:		TwoPort_SRAM.v
-//Description:	Two-Port SRAM
-//Version:		0.1
-//=========================================
 `include "def.v"
 
 module Data_memory(
