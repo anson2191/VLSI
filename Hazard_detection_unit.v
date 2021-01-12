@@ -21,47 +21,25 @@ module Hazard_detection_unit(IF_ID_RS,
 	//data hazard for lw , RT is the destination of lw
 	always(*)
 	begin
-		if(ID_EX_MemRead) begin //lw before R-type or lw before branch
-			EX_Flush = 1'b0;
-			if( (IF_ID_RS==ID_EX_RT) || (IF_ID_RT==ID_EX_RT) ) begin
-				Hold = 1'b1;
-				ID_Flush = 1'b1; //ID_EX_MemRead = 0 next cycle
-			end
-			else begin
-				Hold = 1'b0;
-				ID_Flush = 1'b0;
-			end
+		if(ID_EX_MemRead && ((IF_ID_RS==ID_EX_RT) || (IF_ID_RT==ID_EX_RT)) ) begin
+			//lw before R-type or lw before branch
+			Hold = 1'b1;
+			ID_Flush = 1'b1; //ID_EX_MemRead = 0 next cycle
 		end
-		else if(EX_MEM_MemRead && branch) begin //lw before before branch
-			if( (IF_ID_RS==EX_MEM_RT) || (IF_ID_RT==EX_MEM_RT) ) begin
-				Hold = 1'b1;
-				EX_Flush = 1'b1;
-			end
-			else begin
-				Hold = 1'b0;
-				EX_Flush = 1'b0;
-			end
+		else if(EX_MEM_MemRead && branch && ((IF_ID_RS==EX_MEM_RT) || (IF_ID_RT==EX_MEM_RT)) ) begin
+			//lw before before branch
+			Hold = 1'b1;
+			EX_Flush = 1'b1;
 		end
-		
-	end
-	
-	//data hazard for R-type before branch
-	always@(*)
-	begin
-		EX_Flush = 1'b0;
-		if(ID_EX_RegWrite) begin
-			if( (IF_ID_RS==ID_EX_RD) || (IF_ID_RT==ID_EX_RD)) begin
-				Hold = 1'b1;
-				ID_Flush = 1'b1;
-			end
-			else begin
-				Hold = 1'b0;
-				ID_Flush = 1'b0;
-			end
+		else if(ID_EX_RegWrite && ((IF_ID_RS==ID_EX_RD) || (IF_ID_RT==ID_EX_RD)) ) begin
+			//R-type before branch
+			Hold = 1'b1;
+			ID_Flush = 1'b1;
 		end
 		else begin
 			Hold = 1'b0;
 			ID_Flush = 1'b0;
 		end
 	end
+
 endmodule
