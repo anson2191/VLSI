@@ -1,15 +1,37 @@
-`include "def.v"
-//`define INTERNAL_BITS 32
-//`define DATA_BITS 32
-module Adder(
-	Data_in1,
-	Data_in2,
-	Result
-);
+`include "dev.v"
+//`define REGISTER_BITS 5
 
-	input [`INTERNAL_BITS-1:0] Data_in1,Data_in2;
-	output [`INTERNAL_BITS-1:0] Result;
-
- assign Result = Data_in1 + Data_in2;
-
+module Forwarding_unit(ID_EX_RS,
+					   ID_EX_RT,
+					   EX_MEM_RD,
+					   MEM_WB_RD,
+					   EX_MEM_RegWrite,
+					   MEM_WB_RegWrite,
+					   src1_mux,
+					   src2_mux
+					   );
+	
+	input EX_MEM_WB, MEM_WB_WB;
+	input [`REDISTER_BITS-1:0] ID_EX_RS, ID_EX_RT, EX_MEM_RD, MEM_WB_RD;
+	output [1:0] src1_mux, src2_mux;
+	
+	always(*)
+	begin
+		if(EX_MEM_RegWrite) begin //forward from EX_MEM
+			if(ID_EX_RS==EX_MEM_RD)
+				src1_mux = 2'b01; //rs
+			else
+				src2_mux = 2'b01; //rt
+		end
+		else if(MEM_WB_RegWrite) begin //forward from MEM_WB
+			if(ID_EX_RS==MEM_WB_RD)
+				src1_mux = 2'b10; //rs
+			else
+				src2_mux = 2'b10; //rt
+		end
+		else begin//without forwarding
+			src1_mux = 2'b00;
+			src2_mux = 2'b00; 
+		end
+	end
 endmodule
